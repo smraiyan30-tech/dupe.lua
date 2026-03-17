@@ -1,76 +1,74 @@
 # dupe.lua
--- Admin Extreme Duplicator by el_raiyan7
+-- Normal Player Friendly Dupe Script by el_raiyan7
 local Player = game.Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
 
--- পুরোনো GUI থাকলে ডিলিট করে দেবে
-if PlayerGui:FindFirstChild("ExtremeDupeGui") then
-    PlayerGui.ExtremeDupeGui:Destroy()
+-- পুরোনো GUI মুছে ফেলা
+if PlayerGui:FindFirstChild("PlayerDupeGui") then
+    PlayerGui.PlayerDupeGui:Destroy()
 end
 
--- GUI Setup
+-- GUI ডিজাইন
 local ScreenGui = Instance.new("ScreenGui", PlayerGui)
-ScreenGui.Name = "ExtremeDupeGui"
+ScreenGui.Name = "PlayerDupeGui"
 
 local MainFrame = Instance.new("Frame", ScreenGui)
-MainFrame.Size = UDim2.new(0, 220, 0, 150)
-MainFrame.Position = UDim2.new(0.5, -110, 0.4, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-MainFrame.BorderSizePixel = 2
+MainFrame.Size = UDim2.new(0, 250, 0, 180)
+MainFrame.Position = UDim2.new(0.5, -125, 0.4, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Draggable = true
 
-local Title = Instance.new("TextLabel", MainFrame)
-Title.Size = UDim2.new(1, 0, 0, 30)
-Title.Text = "EL_RAIYAN7 DUPE HUB"
-Title.TextColor3 = Color3.fromRGB(255, 255, 0)
-Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+local UICorner = Instance.new("UICorner", MainFrame)
+UICorner.CornerRadius = UDim.new(0, 15)
 
-local CountLabel = Instance.new("TextLabel", MainFrame)
-CountLabel.Size = UDim2.new(1, 0, 0, 30)
-CountLabel.Position = UDim2.new(0, 0, 0.3, 0)
-CountLabel.Text = "Items Duplicated: 0"
-CountLabel.TextColor3 = Color3.new(1, 1, 1)
-CountLabel.BackgroundTransparency = 1
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Text = "🎁 FREE ITEM DUPE 🎁"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+
+local Instruction = Instance.new("TextLabel", MainFrame)
+Instruction.Size = UDim2.new(1, 0, 0, 40)
+Instruction.Position = UDim2.new(0, 0, 0.25, 0)
+Instruction.Text = "আইটেমটি হাতে (Equip) নিয়ে নিচে ক্লিক করুন"
+Instruction.TextColor3 = Color3.fromRGB(200, 200, 200)
+Instruction.BackgroundTransparency = 1
+Instruction.TextSize = 12
 
 local DupeButton = Instance.new("TextButton", MainFrame)
 DupeButton.Size = UDim2.new(0.8, 0, 0.3, 0)
-DupeButton.Position = UDim2.new(0.1, 0, 0.6, 0)
-DupeButton.Text = "START MULTIPLY"
-DupeButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+DupeButton.Position = UDim2.new(0.1, 0, 0.55, 0)
+DupeButton.Text = "DUPE (দ্বিগুণ করুন)"
+DupeButton.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
 DupeButton.TextColor3 = Color3.new(1, 1, 1)
+DupeButton.Font = Enum.Font.GothamBold
+DupeButton.TextSize = 16
 
--- লজিক এবং ভেরিয়েবল
-local isDuplicationOn = false
-local totalCount = 0
+local BtnCorner = Instance.new("UICorner", DupeButton)
+BtnCorner.CornerRadius = UDim.new(0, 8)
 
+-- ডুপ্লিকেট করার আসল কোড
 DupeButton.MouseButton1Click:Connect(function()
-    isDuplicationOn = not isDuplicationOn
+    local char = Player.Character
+    local tool = char and char:FindFirstChildOfClass("Tool")
     
-    if isDuplicationOn then
-        DupeButton.Text = "STOPPING..."
-        DupeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    if tool then
+        -- একবার ক্লিকে আইটেমটি দ্বিগুণ হবে
+        local clone = tool:Clone()
+        clone.Parent = Player.Backpack
         
-        -- দ্রুত ডুপ্লিকেট করার জন্য লুপ
-        task.spawn(function()
-            while isDuplicationOn do
-                local char = Player.Character
-                local tool = char and char:FindFirstChildOfClass("Tool")
-                
-                if tool then
-                    -- এক ক্লিকে ৫টি করে কপি তৈরি হবে (যাতে গেম ক্রাশ না করে)
-                    for i = 1, 5 do 
-                        local clone = tool:Clone()
-                        clone.Parent = Player.Backpack
-                        totalCount = totalCount + 1
-                    end
-                    CountLabel.Text = "Items Duplicated: " .. totalCount
-                end
-                task.wait(0.01) -- অনেক দ্রুত কাজ করবে
-            end
-        end)
+        DupeButton.Text = "✅ সফল হয়েছে!"
+        task.wait(1)
+        DupeButton.Text = "DUPE (দ্বিগুণ করুন)"
     else
-        DupeButton.Text = "START MULTIPLY"
-        DupeButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+        DupeButton.Text = "❌ হাতে কিছু নিন!"
+        DupeButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+        task.wait(1)
+        DupeButton.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+        DupeButton.Text = "DUPE (দ্বিগুণ করুন)"
     end
 end)
